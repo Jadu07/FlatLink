@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { LogIn, UserPlus } from 'lucide-react';
 
 export default function Navbar() {
   return (
@@ -12,18 +13,20 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <Link
             href="/login"
-            className="text-sm font-semibold text-zinc-500 hover:text-zinc-950"
+            className="flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-zinc-950 transition-colors"
           >
+            <LogIn className="w-4 h-4" />
             Log in
           </Link>
 
           <Link
             href="/register"
-            className="rounded-full bg-[#164E44] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#1E6356]"
+            className="flex items-center gap-2 rounded-full bg-[#164E44] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#1E6356] transition-all shadow-lg shadow-[#164E44]/10 hover:shadow-[#164E44]/20"
           >
+            <UserPlus className="w-4 h-4" />
             Register
           </Link>
         </div>
