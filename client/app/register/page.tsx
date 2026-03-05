@@ -51,7 +51,7 @@ export default function Register() {
 
                   <button
                     type="submit"
-                    className="flex w-full items-center justify-center rounded-full bg-[#164E44] h-14 text-[1.05rem] font-semibold text-white transition-all duration-300 hover:bg-[#123F37] hover:shadow-[0_8px_30px_rgb(22,78,68,0.2)] hover:-translate-y-0.5 mt-8"
+                    className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#164E44] h-14 text-[1.05rem] font-semibold text-white transition-all duration-300 hover:bg-[#123F37] hover:shadow-[0_8px_30px_rgb(22,78,68,0.2)] hover:-translate-y-0.5 mt-8"
                   >
                     Sign up
                   </button>
@@ -59,7 +59,7 @@ export default function Register() {
 
                 <p className="text-sm font-medium text-zinc-500 px-1">
                   Already have an account?{" "}
-                  <Link href="/login" className="font-semibold text-[#164E44] hover:text-[#1E6356] transition-colors">
+                  <Link href="/login" className="font-semibold cursor-pointer text-[#164E44] hover:text-[#1E6356] transition-colors">
                     Log in
                   </Link>
                 </p>

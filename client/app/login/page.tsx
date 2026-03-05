@@ -57,7 +57,7 @@ export default function Login() {
 
                     <Link
                       href="#"
-                      className="text-sm font-semibold text-[#164E44] hover:text-[#1E6356] transition-colors"
+                      className="text-sm font-semibold cursor-pointer text-[#164E44] hover:text-[#1E6356] transition-colors"
                     >
                       Forgot password?
                     </Link>
@@ -65,7 +65,7 @@ export default function Login() {
 
                   <button
                     type="submit"
-                    className="mt-8 flex w-full items-center justify-center h-14 rounded-full bg-[#164E44] text-white text-[1.05rem] font-semibold transition-all duration-300 hover:bg-[#123F37] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(22,78,68,0.2)]"
+                    className="mt-8 flex w-full cursor-pointer items-center justify-center h-14 rounded-full bg-[#164E44] text-white text-[1.05rem] font-semibold transition-all duration-300 hover:bg-[#123F37] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(22,78,68,0.2)]"
                   >
                     Log in
                   </button>
@@ -75,7 +75,7 @@ export default function Login() {
                   Don't have an account?{" "}
                   <Link
                     href="/register"
-                    className="font-semibold text-[#164E44] hover:text-[#1E6356] transition-colors"
+                    className="font-semibold cursor-pointer text-[#164E44] hover:text-[#1E6356] transition-colors"
                   > Sign up
                   </Link>
                 </p>
