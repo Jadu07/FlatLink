@@ -5,3 +5,5 @@ build
 *.pem
 npm-debug.log*
 .env*
+
+/src/generated/prisma
