@@ -25,6 +25,21 @@ class AuthService {
 
         return { user: { id: newUser.id, email: newUser.email, name: newUser.name }, token }
     }
+
+    async login(credentials: any) {
+        const { email, password } = credentials
+        const user = await prisma.user.findUnique({ where: { email } })
+
+        if (!user) { throw new Error('Invalid credentials') }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password)
+
+        if (!isPasswordValid) { throw new Error('Invalid credentials') }
+        
+        const token = jwt.sign({ userId: user.id }, this.jwtSecret, { expiresIn: '1d' })
+
+        return { user: { id: user.id, email: user.email, name: user.name }, token }
+    }
 }
 
 const authService = new AuthService()

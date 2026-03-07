@@ -11,6 +11,7 @@ class AuthRoutes {
 
     private initializeRoutes() {
         this.router.post('/signup', authController.signup)
+        this.router.post('/login', authController.signin)
     }
 
     public getRouter() {
