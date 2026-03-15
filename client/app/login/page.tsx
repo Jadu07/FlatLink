@@ -1,7 +1,30 @@
+'use client'
+
 import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
+import { useAuth } from "@/context/AuthContext"
 
 export default function Login() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const { login } = useAuth()
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
+    try {
+      await login({ email, password })
+    } catch (err: any) {
+      setError(err.message || "Something went wrong")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <main className="relative flex min-h-screen w-full items-center justify-center overflow-hidden py-20 lg:py-0">
       <div className="absolute inset-0">
@@ -26,13 +49,20 @@ export default function Login() {
               </div>
 
               <div className="w-full max-w-md space-y-6">
+                {error && (
+                  <div className="p-3 text-sm font-medium text-red-500 bg-red-50 border border-red-100 rounded-lg">
+                    {error}
+                  </div>
+                )}
 
-                <form className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="space-y-6 pb-2">
                     <input
                       type="email"
                       placeholder="Email address"
                       required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="w-full h-12 px-1 text-lg bg-transparent border-b border-zinc-200 outline-none placeholder:text-zinc-400 focus:border-[#164E44] transition-colors"
                     />
 
@@ -40,6 +70,8 @@ export default function Login() {
                       type="password"
                       placeholder="Password"
                       required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       className="w-full h-12 px-1 text-lg bg-transparent border-b border-zinc-200 outline-none placeholder:text-zinc-400 focus:border-[#164E44] transition-colors"
                     />
                   </div>
@@ -65,9 +97,10 @@ export default function Login() {
 
                   <button
                     type="submit"
-                    className="mt-8 flex w-full cursor-pointer items-center justify-center h-14 rounded-full bg-[#164E44] text-white text-[1.05rem] font-semibold transition-all duration-300 hover:bg-[#123F37] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(22,78,68,0.2)]"
+                    disabled={loading}
+                    className="mt-8 flex w-full cursor-pointer items-center justify-center h-14 rounded-full bg-[#164E44] text-white text-[1.05rem] font-semibold transition-all duration-300 hover:bg-[#123F37] hover:-translate-y-0.5 hover:shadow-[0_8px_30px_rgba(22,78,68,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Log in
+                   {loading ? "Logging in..." : "Log in"}
                   </button>
                 </form>
 

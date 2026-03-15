@@ -1,7 +1,31 @@
+'use client'
+
 import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
+import { useAuth } from "@/context/AuthContext"
 
 export default function Register() {
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const { register } = useAuth()
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault()
+    setError("")
+    setLoading(true)
+    try {
+      await register({ name, email, password })
+    } catch (err: any) {
+      setError(err.message || "Something went wrong")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <main className="relative flex min-h-screen w-full items-center justify-center overflow-hidden py-20 lg:py-0">
       <div className="absolute inset-0">
@@ -27,33 +51,46 @@ export default function Register() {
               </div>
 
               <div className="w-full max-w-md space-y-6">
-                <form className="space-y-5">
+                {error && (
+                  <div className="p-3 text-sm font-medium text-red-500 bg-red-50 border border-red-100 rounded-lg">
+                    {error}
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="space-y-6 pb-2">
                     <input
                       type="text"
                       placeholder="Full Name"
                       required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       className="h-12 w-full border-b border-zinc-200 bg-transparent px-1 text-lg outline-none placeholder:text-zinc-400 transition-colors focus:border-[#164E44]"
                     />
                     <input
                       type="email"
                       placeholder="Email address"
                       required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="h-12 w-full border-b border-zinc-200 bg-transparent px-1 text-lg outline-none placeholder:text-zinc-400 transition-colors focus:border-[#164E44]"
                     />
                     <input
                       type="password"
                       placeholder="Password"
                       required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       className="h-12 w-full border-b border-zinc-200 bg-transparent px-1 text-lg outline-none placeholder:text-zinc-400 transition-colors focus:border-[#164E44]"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#164E44] h-14 text-[1.05rem] font-semibold text-white transition-all duration-300 hover:bg-[#123F37] hover:shadow-[0_8px_30px_rgb(22,78,68,0.2)] hover:-translate-y-0.5 mt-8"
+                    disabled={loading}
+                    className="flex w-full cursor-pointer items-center justify-center rounded-full bg-[#164E44] h-14 text-[1.05rem] font-semibold text-white transition-all duration-300 hover:bg-[#123F37] hover:shadow-[0_8px_30px_rgb(22,78,68,0.2)] hover:-translate-y-0.5 mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Sign up
+                    {loading ? "Signing up..." : "Sign up"}
                   </button>
                 </form>
 
