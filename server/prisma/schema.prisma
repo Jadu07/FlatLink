@@ -22,20 +22,51 @@ model User {
 }
 
 model Listing {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
-  description  String
-  address      String
-  city         String
-  price        Float
-  bedrooms     Int
-  bathrooms    Int
-  propertyType String
-  roomType     String   
-  amenities    String[]
-  images       String[]
-  userId       String   @db.ObjectId
-  user         User     @relation(fields: [userId], references: [id])
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id               String           @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  userName         String
+  description      String
+  address          String
+  city             String
+  price            Float
+  bedrooms         Int
+  bathrooms        Int
+  kitchens         Int
+  propertyType     PropertyType
+  roomType         RoomType
+  lookingForGender GenderPreference
+  lookingForType   ListingType
+  amenities        String[]
+  images           String[]
+  userId           String           @db.ObjectId
+  user             User             @relation(fields: [userId], references: [id])
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
+
+enum GenderPreference {
+  ANY
+  MALE
+  FEMALE
+}
+
+enum ListingType {
+  ROOMMATE
+  ROOM
+}
+
+enum PropertyType {
+  APARTMENT
+  HOUSE
+  STUDIO
+  LOFT
+  PENTHOUSE
+  OTHER
+}
+
+enum RoomType {
+  PRIVATE
+  SHARED
+  ENTIRE_FLAT
+  OTHER
 }
