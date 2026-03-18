@@ -11,6 +11,7 @@ class ListingRoutes {
 
     private initializeRoutes() {
         this.router.post('/create', listingController.create)
+        this.router.get('/', listingController.getAll)
     }
 
     public getRouter() {

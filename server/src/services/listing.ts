@@ -53,6 +53,18 @@ class ListingService {
 
         return listing
     }
+
+    async getAll() {
+        const listings = await prisma.listing.findMany({
+            orderBy: { createdAt: 'desc' },
+            include: {
+                user: {
+                    select: { id: true, name: true, email: true }
+                }
+            }
+        })
+        return listings
+    }
 }
 
 const listingService = new ListingService()

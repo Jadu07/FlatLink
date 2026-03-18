@@ -15,6 +15,17 @@ class ListingController {
             })
         }
     }
+
+    getAll = async (req: Request, res: Response) => {
+        try {
+            const listings = await listingService.getAll()
+            res.status(200).json({ listings })
+        } catch (error: any) {
+            res.status(500).json({
+                message: error.message || 'Failed to fetch listings'
+            })
+        }
+    }
 }
 
 const listingController = new ListingController()
