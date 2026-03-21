@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import listingController from '../controllers/listing'
+import { authMiddleware } from '../middleware/auth'
 
 class ListingRoutes {
     private router: Router
@@ -10,7 +11,8 @@ class ListingRoutes {
     }
 
     private initializeRoutes() {
-        this.router.post('/create', listingController.create)
+        this.router.get('/sign-upload', listingController.signUpload)
+        this.router.post('/create', authMiddleware, listingController.create)
         this.router.get('/', listingController.getAll)
     }
 

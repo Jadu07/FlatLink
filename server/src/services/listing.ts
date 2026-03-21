@@ -3,7 +3,6 @@ import { PropertyType, RoomType, GenderPreference, ListingType } from '@prisma/c
 
 interface CreateListingData {
     title: string
-    userName: string
     description: string
     address: string
     city: string
@@ -11,13 +10,48 @@ interface CreateListingData {
     bedrooms: number
     bathrooms: number
     kitchens: number
-    propertyType: PropertyType
-    roomType: RoomType
-    lookingForGender: GenderPreference
-    lookingForType: ListingType
+    propertyType: string
+    roomType: string
+    lookingFor: string
+    occupancy: string
     amenities: string[]
     images: string[]
     userId: string
+}
+
+const toGenderPref = (val: string): GenderPreference => {
+    const map: Record<string, GenderPreference> = {
+        Male: GenderPreference.MALE,
+        Female: GenderPreference.FEMALE,
+        Any: GenderPreference.ANY
+    }
+    return map[val] ?? GenderPreference.ANY
+}
+
+const toListingType = (occupancy: string): ListingType => {
+    return occupancy === 'Shared' ? ListingType.ROOMMATE : ListingType.ROOM
+}
+
+const toPropertyType = (val: string): PropertyType => {
+    const map: Record<string, PropertyType> = {
+        APARTMENT: PropertyType.APARTMENT,
+        HOUSE: PropertyType.HOUSE,
+        STUDIO: PropertyType.STUDIO,
+        LOFT: PropertyType.LOFT,
+        PENTHOUSE: PropertyType.PENTHOUSE,
+        OTHER: PropertyType.OTHER
+    }
+    return map[val] ?? PropertyType.OTHER
+}
+
+const toRoomType = (val: string): RoomType => {
+    const map: Record<string, RoomType> = {
+        PRIVATE: RoomType.PRIVATE,
+        SHARED: RoomType.SHARED,
+        ENTIRE_FLAT: RoomType.ENTIRE_FLAT,
+        OTHER: RoomType.OTHER
+    }
+    return map[val] ?? RoomType.OTHER
 }
 
 class ListingService {
@@ -33,20 +67,20 @@ class ListingService {
         const listing = await prisma.listing.create({
             data: {
                 title: data.title,
-                userName: data.userName,
+                userName: user.name,                          // pulled from DB, not form
                 description: data.description,
                 address: data.address,
                 city: data.city,
                 price: data.price,
-                bedrooms: data.bedrooms,
-                bathrooms: data.bathrooms,
-                kitchens: data.kitchens,
-                propertyType: data.propertyType,
-                roomType: data.roomType,
-                lookingForGender: data.lookingForGender,
-                lookingForType: data.lookingForType,
-                amenities: data.amenities,
-                images: data.images,
+                bedrooms: Number(data.bedrooms) || 0,
+                bathrooms: Number(data.bathrooms) || 0,
+                kitchens: Number(data.kitchens) || 0,
+                propertyType: toPropertyType(data.propertyType),
+                roomType: toRoomType(data.roomType),
+                lookingForGender: toGenderPref(data.lookingFor),
+                lookingForType: toListingType(data.occupancy),
+                amenities: data.amenities ?? [],
+                images: data.images ?? [],
                 userId: data.userId
             }
         })
