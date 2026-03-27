@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { LogIn, UserPlus, Plus, User, LogOut, ChevronDown } from 'lucide-react'
+import { LogIn, UserPlus, Plus, User, LogOut, ChevronDown, Compass } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useEffect, useState } from 'react'
 
@@ -20,7 +20,7 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-zinc-100">
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-        
+
         <Link href="/" className="flex items-center">
           <span className="text-3xl select-none">
             <span className="font-black text-[#164E44]">flat</span>
@@ -33,6 +33,16 @@ export default function Navbar() {
             <div className="h-10 w-32 bg-zinc-50 rounded-full animate-pulse" />
           ) : !user ? (
             <>
+              <Link
+                href="/explore-listings"
+                className="flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-zinc-950 transition-colors"
+              >
+                <Compass className="w-4 h-4" />
+                Explore
+              </Link>
+
+              <div className="w-px h-6 bg-zinc-200 mx-1 hidden sm:block" />
+
               <Link
                 href="/login"
                 className="flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-zinc-950 transition-colors"
@@ -52,15 +62,25 @@ export default function Navbar() {
           ) : (
             <div className="flex items-center gap-4">
               <Link
+                href="/explore-listings"
+                className="flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-zinc-950 transition-colors"
+              >
+                <Compass className="w-4 h-4" />
+                Explore
+              </Link>
+              <div className="w-px h-6 bg-zinc-200 mx-1 hidden sm:block" />
+
+
+              <Link
                 href="/create-listing"
                 className="flex items-center gap-2 rounded-full border border-[#164E44] px-5 py-2 text-sm font-bold text-[#164E44] hover:bg-[#164E44] hover:text-white transition-all max-sm:hidden"
               >
                 <Plus className="w-4 h-4" />
                 Create Listing
               </Link>
-              
-              <div 
-                className="relative" 
+
+              <div
+                className="relative"
                 onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setShowDropdown(false)}
               >
                 <button
@@ -90,9 +110,8 @@ export default function Navbar() {
                           key={item.label}
                           href={item.href as string}
                           onClick={() => { setShowDropdown(false); item.onClick?.() }}
-                          className={`flex w-full items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all ${
-                            item.danger ? 'text-red-600 hover:bg-red-50' : 'text-zinc-600 hover:bg-zinc-50 hover:text-[#164E44] group'
-                          }`}
+                          className={`flex w-full items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all ${item.danger ? 'text-red-600 hover:bg-red-50' : 'text-zinc-600 hover:bg-zinc-50 hover:text-[#164E44] group'
+                            }`}
                         >
                           <item.Icon className={`w-4 h-4 ${!item.danger && 'transition-colors group-hover:text-[#164E44]'}`} />
                           {item.label}
