@@ -86,7 +86,7 @@ export default function CreateListingPage() {
 
     const uploadToCloudinary = async (file: File) => {
         const token = localStorage.getItem('token')
-        const signRes = await fetch('http://localhost:8000/api/listings/sign-upload', {
+        const signRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/sign-upload`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
         if (!signRes.ok) throw new Error('Failed to get upload signature')
@@ -143,7 +143,7 @@ export default function CreateListingPage() {
             }
 
             const token = localStorage.getItem('token')
-            const res = await fetch('http://localhost:8000/api/listings/create', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

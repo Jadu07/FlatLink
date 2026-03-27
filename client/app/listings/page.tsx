@@ -11,7 +11,7 @@ const ListingsPage = () => {
     useEffect(() => {
         const fetchListings = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/listings')
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings`)
                 const data = await response.json()
                 setListings(data.listings || [])
             } catch (error) {

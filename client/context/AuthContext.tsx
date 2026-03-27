@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 
 const AuthContext = createContext<any>(null)
 
-const API = 'http://localhost:8000/api/auth'
+const API = `${process.env.NEXT_PUBLIC_API_URL}/auth`
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null)
