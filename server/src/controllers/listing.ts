@@ -43,6 +43,24 @@ class ListingController {
             })
         }
     }
+
+    getById = async (req: AuthRequest, res: Response) => {
+        try {
+            const { id } = req.params
+            if (!id || typeof id !== 'string') {
+                return res.status(400).json({ message: 'Invalid or missing listing ID' })
+            }
+            const listing = await listingService.getById(id)
+            res.status(200).json({ listing })
+        } catch (error: any) {
+            if (error.message === 'Listing not found') {
+                return res.status(404).json({ message: error.message })
+            }
+            res.status(500).json({
+                message: error.message || 'Failed to fetch listing'
+            })
+        }
+    }
 }
 
 const listingController = new ListingController()
