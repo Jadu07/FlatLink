@@ -14,6 +14,7 @@ class ListingRoutes {
         this.router.get('/sign-upload', listingController.signUpload)
         this.router.post('/create', authMiddleware, listingController.create)
         this.router.get('/', listingController.getAll)
+        this.router.get('/:id', listingController.getById)
     }
 
     public getRouter() {
