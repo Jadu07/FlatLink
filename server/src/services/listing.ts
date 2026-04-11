@@ -99,6 +99,21 @@ class ListingService {
         })
         return listings
     }
+
+    async getById(id: string) {
+        const listing = await prisma.listing.findUnique({
+            where: { id },
+            include: {
+                user: {
+                    select: { id: true, name: true, email: true }
+                }
+            }
+        })
+        if (!listing) {
+            throw new Error('Listing not found')
+        }
+        return listing
+    }
 }
 
 const listingService = new ListingService()
