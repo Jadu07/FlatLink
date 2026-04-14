@@ -1,6 +1,8 @@
 'use client'
 import React from 'react'
-import { Bed, Bath, MapPin, MessageCircle, User, Users } from 'lucide-react'
+import { Bed, Bath, MapPin, User, Users } from 'lucide-react'
+
+import Link from 'next/link'
 
 interface ListingProps {
     listing: {
@@ -24,7 +26,8 @@ const ListingCard = ({ listing }: ListingProps) => {
     const hasImage = listing.images && listing.images.length > 0 && !imgError
 
     return (
-        <div className="flex h-44 overflow-hidden rounded-xl border border-zinc-200 bg-white">
+        <Link href={`/listings/${listing.id}`} className="block transition-transform hover:-translate-y-1 hover:shadow-xl rounded-xl duration-300">
+            <div className="flex h-44 overflow-hidden rounded-xl border border-zinc-200 bg-white">
 
             <div className="relative w-44 shrink-0 overflow-hidden bg-zinc-100">
                 {hasImage ? (
@@ -35,8 +38,12 @@ const ListingCard = ({ listing }: ListingProps) => {
                         onError={() => setImgError(true)}
                     />
                 ) : (
-                    <div className="flex h-full w-full items-center justify-center text-3xl">
-                        🏠
+                    <div className="flex h-full w-full flex-col items-center justify-center bg-zinc-50 text-center">
+                        <span className="text-xl select-none opacity-40">
+                            <span className="font-black text-[#164E44]">flat</span>
+                            <span className="font-light text-zinc-950">link</span>
+                        </span>
+                        <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mt-1">No Image</span>
                     </div>
                 )}
             </div>
@@ -82,15 +89,11 @@ const ListingCard = ({ listing }: ListingProps) => {
                         <span className="text-lg font-black text-zinc-950">₹{listing.price.toLocaleString()}</span>
                         <span className="ml-1 text-xs text-zinc-400">/mo</span>
                     </div>
-
-                    <button className="flex items-center gap-1.5 rounded-lg bg-[#164E44] px-3 py-1.5 text-xs font-semibold text-white">
-                        <MessageCircle className="h-3.5 w-3.5" />
-                        Chat
-                    </button>
                 </div>
 
             </div>
         </div>
+        </Link>
     )
 }
 
