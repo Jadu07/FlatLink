@@ -24,3 +24,4 @@ class ListingRoutes {
 
 const listingRoutes = new ListingRoutes()
 export default listingRoutes
+ 
