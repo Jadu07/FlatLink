@@ -1,11 +1,13 @@
 'use client'
 import Image from 'next/image'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/context/AuthContext'
 import {
     MapPin, IndianRupee, Upload, X, Wifi, Tv, Wind,
     Zap, ShowerHead, Car, Flame, Refrigerator, CheckCircle2,
     Info, Image as ImageIcon, ListChecks, Building2,
-    Phone, MoveRight, Users, Home
+    Phone, MoveRight, Users, Home, Loader2
 } from 'lucide-react'
 
 const HIGHLIGHTS = ['Attached bathroom', 'Western toilets', 'Furnished', 'Power 24×7', 'Bills included', 'Gated society', 'No alcohol', 'Family friendly', 'Pet friendly', 'Near metro', 'Gym nearby', 'Housekeeping', 'Parking included', 'Balcony', 'Natural light', 'Quiet area']
@@ -76,6 +78,23 @@ export default function CreateListingPage() {
     const [submitting, setSubmitting] = useState(false)
     const [status, setStatus] = useState('')
     const fileInputRef = useRef<HTMLInputElement>(null)
+
+    const { user, loading: authLoading } = useAuth()
+    const router = useRouter()
+
+    useEffect(() => {
+        if (!authLoading && !user) {
+            router.push('/login')
+        }
+    }, [user, authLoading, router])
+
+    if (authLoading || !user) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-white pt-24 pb-20">
+                <Loader2 className="h-8 w-8 animate-spin text-zinc-300" />
+            </div>
+        )
+    }
 
     const toggleItem = (list: string[], item: string, setter: (val: string[]) => void) => setter(list.includes(item) ? list.filter(i => i !== item) : [...list, item])
 
