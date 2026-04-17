@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
 import ListingCard from '@/components/ListingCard'
 import { Search, Loader2 } from 'lucide-react'
 
@@ -29,8 +30,11 @@ const ListingsPage = () => {
     )
 
     return (
-        <div className="min-h-screen bg-zinc-50/50 pt-24 pb-20">
-            <div className="mx-auto max-w-7xl px-6">
+        <main className="relative min-h-screen w-full bg-zinc-50/50 pt-24 pb-20">
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <Image src="/images/city_map_pattern.png" alt="Map Pattern Background" fill className="object-cover opacity-[0.06]" priority />
+            </div>
+            <div className="relative z-10 mx-auto max-w-7xl px-6">
 
                 <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                     <h1 className="text-3xl font-black tracking-tight text-zinc-900">
@@ -66,7 +70,7 @@ const ListingsPage = () => {
                     </div>
                 )}
             </div>
-        </div>
+        </main>
     )
 }
 
