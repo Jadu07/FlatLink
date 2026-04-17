@@ -1,9 +1,10 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { MapPin, Bed, Bath, Users, Home, Maximize2, Loader2, ArrowLeft, Mail, CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
+import { useAuth } from "@/context/AuthContext"
 import Lightbox from "yet-another-react-lightbox"
 import "yet-another-react-lightbox/styles.css"
 
@@ -27,6 +28,7 @@ interface Listing {
 
 const ListingDetailPage = () => {
   const { id } = useParams()
+  const router = useRouter()
   const [listing, setListing] = useState<Listing | null>(null)
   const [loading, setLoading] = useState(true)
   const [open, setOpen] = useState(false)
@@ -35,6 +37,7 @@ const ListingDetailPage = () => {
   const [enquired, setEnquired] = useState(false)
   const [enquiryMessage, setEnquiryMessage] = useState("Hi! I'm interested in your place. Is it still available?")
   const [imgError, setImgError] = useState(false)
+  const { user } = useAuth()
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -72,6 +75,40 @@ const ListingDetailPage = () => {
 
   const slides = listing.images?.map(url => ({ src: url })) || []
   const images = listing.images || []
+
+  const handleEnquire = async () => {
+    if (!enquiryMessage.trim()) return
+    
+    if (!user) {
+      router.push('/login')
+      return
+    }
+
+    setEnquiring(true)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/enquiries/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          listingId: listing?.id,
+          name: user.name,
+          email: user.email,
+          phone: null,
+          message: enquiryMessage
+        })
+      })
+
+      if (response.ok) {
+        setEnquired(true)
+      } else {
+        console.error('Failed to send enquiry')
+      }
+    } catch (error) {
+      console.error('Error sending enquiry:', error)
+    } finally {
+      setEnquiring(false)
+    }
+  }
 
   return (
     <main className="min-h-screen bg-white pt-24 pb-20">
@@ -205,10 +242,7 @@ const ListingDetailPage = () => {
 
               <button
                 disabled={enquiring || enquired || !enquiryMessage.trim()}
-                onClick={() => {
-                  setEnquiring(true)
-                  setTimeout(() => { setEnquiring(false); setEnquired(true) }, 1200)
-                }}
+                onClick={handleEnquire}
                 className={`w-full py-3.5 rounded-xl font-bold text-[15px] transition-all flex items-center justify-center gap-2 ${
                   enquired ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-[#164E44] text-white hover:bg-[#113a33] disabled:bg-zinc-100 disabled:text-zinc-400'
                 }`}
