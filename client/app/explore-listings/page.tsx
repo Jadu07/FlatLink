@@ -10,33 +10,39 @@ const ListingsContent = () => {
     const [listings, setListings] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [query, setQuery] = useState('')
+    const [page, setPage] = useState(1)
+    const [totalPages, setTotalPages] = useState(1)
 
     useEffect(() => {
         const urlQuery = searchParams.get('query')
         if (urlQuery) {
             setQuery(urlQuery)
+            setPage(1)
         }
     }, [searchParams])
 
     useEffect(() => {
         const fetchListings = async () => {
+            setLoading(true)
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings`)
+                const searchQuery = query ? `&search=${encodeURIComponent(query)}` : ''
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/listings?page=${page}&limit=20${searchQuery}`)
                 const data = await response.json()
                 setListings(data.listings || [])
+                setTotalPages(data.pagination?.totalPages || 1)
             } catch (error) {
                 console.error('Error fetching listings:', error)
             } finally {
                 setLoading(false)
             }
         }
-        fetchListings()
-    }, [])
+        
+        const timeoutId = setTimeout(() => {
+            fetchListings()
+        }, 300)
 
-    const filtered = listings.filter(l =>
-        l.title.toLowerCase().includes(query.toLowerCase()) ||
-        l.city.toLowerCase().includes(query.toLowerCase())
-    )
+        return () => clearTimeout(timeoutId)
+    }, [page, query])
 
     return (
         <main className="relative min-h-screen w-full bg-zinc-50/50 pt-24 pb-20">
@@ -56,7 +62,10 @@ const ListingsContent = () => {
                             type="text"
                             placeholder="Search city..."
                             value={query}
-                            onChange={(e) => setQuery(e.target.value)}
+                            onChange={(e) => {
+                                setQuery(e.target.value)
+                                setPage(1)
+                            }}
                             className="h-10 w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-4 text-sm outline-none focus:border-[#164E44] focus:ring-2 focus:ring-[#164E44]/5 transition-all"
                         />
                     </div>
@@ -66,12 +75,36 @@ const ListingsContent = () => {
                     <div className="flex h-64 items-center justify-center">
                         <Loader2 className="h-6 w-6 animate-spin text-zinc-300" />
                     </div>
-                ) : filtered.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                        {filtered.map((listing) => (
-                            <ListingCard key={listing.id} listing={listing} />
-                        ))}
-                    </div>
+                ) : listings.length > 0 ? (
+                    <>
+                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                            {listings.map((listing) => (
+                                <ListingCard key={listing.id} listing={listing} />
+                            ))}
+                        </div>
+                        
+                        {totalPages > 1 && (
+                            <div className="mt-12 flex items-center justify-center gap-4">
+                                <button 
+                                    disabled={page === 1}
+                                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                                    className="px-5 py-2.5 rounded-xl border border-zinc-200 bg-white text-[13px] font-bold text-zinc-700 hover:bg-zinc-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
+                                >
+                                    Previous
+                                </button>
+                                <span className="text-[13px] font-bold text-zinc-400 uppercase tracking-widest px-2">
+                                    Page {page} of {totalPages}
+                                </span>
+                                <button 
+                                    disabled={page === totalPages}
+                                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                    className="px-5 py-2.5 rounded-xl border border-zinc-200 bg-white text-[13px] font-bold text-zinc-700 hover:bg-zinc-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-200 bg-white p-8 text-center text-zinc-500">
                         <p className="font-medium text-zinc-900">No flats found</p>
