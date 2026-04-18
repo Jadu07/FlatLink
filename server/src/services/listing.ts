@@ -88,16 +88,40 @@ class ListingService {
         return listing
     }
 
-    async getAll() {
-        const listings = await prisma.listing.findMany({
-            orderBy: { createdAt: 'desc' },
-            include: {
-                user: {
-                    select: { id: true, name: true, email: true }
+    async getAll(page: number = 1, limit: number = 20, search?: string) {
+        const skip = (page - 1) * limit;
+        
+        const whereClause: any = search ? {
+            OR: [
+                { title: { contains: search, mode: 'insensitive' } },
+                { city: { contains: search, mode: 'insensitive' } }
+            ]
+        } : {};
+
+        const [listings, total] = await Promise.all([
+            prisma.listing.findMany({
+                where: whereClause,
+                skip,
+                take: limit,
+                orderBy: { createdAt: 'desc' },
+                include: {
+                    user: {
+                        select: { id: true, name: true, email: true }
+                    }
                 }
+            }),
+            prisma.listing.count({ where: whereClause })
+        ]);
+
+        return {
+            listings,
+            pagination: {
+                total,
+                page,
+                limit,
+                totalPages: Math.ceil(total / limit)
             }
-        })
-        return listings
+        };
     }
 
     async getById(id: string) {
