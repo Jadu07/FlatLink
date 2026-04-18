@@ -1,8 +1,27 @@
+"use client";
+
 import Image from "next/image";
 import { ChevronRight, Search } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
   const popularCities = ["Bengaluru", "Mumbai", "Pune", "Delhi"];
+
+  const handleSearch = (city?: string) => {
+    const query = city || searchQuery;
+    if (query.trim()) {
+      router.push(`/explore-listings?query=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   return (
     <main className="relative flex min-h-screen w-full items-center justify-center overflow-hidden py-20 lg:py-0">
@@ -38,9 +57,13 @@ export default function Home() {
                     type="text"
                     placeholder="Where are you looking?"
                     aria-label="Search for locations"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={onKeyDown}
                     className="h-16 w-full rounded-2xl border border-zinc-200 bg-zinc-50/50 pl-14 pr-16 text-lg outline-none placeholder:text-zinc-400 transition-all focus:border-[#164E44] focus:ring-4 focus:ring-[#164E44]/5"
                   />
                   <button 
+                    onClick={() => handleSearch()}
                     aria-label="Submit search"
                     className="absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-xl border border-zinc-100 bg-zinc-50 text-zinc-400 transition-colors hover:text-zinc-950"
                   >
@@ -53,6 +76,7 @@ export default function Home() {
                   {popularCities.map((city) => (
                     <button
                       key={city}
+                      onClick={() => handleSearch(city)}
                       className="rounded-full bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-200 hover:text-zinc-900"
                     >
                       {city}
