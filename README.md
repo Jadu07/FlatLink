@@ -35,7 +35,6 @@ The platform prioritizes safety and professional interaction by implementing an 
 ### Location & Discovery
 * **Search & Filters:** Search for listings by title or city.
 * **Geolocation Awareness:** Focused on city-based and location-specific discovery.
-* **College/University Filtering:** Find potential flatmates based on their educational institution background.
 
 ---
 
