@@ -2,68 +2,87 @@
 
 ```mermaid
 classDiagram
-    %% Core User Entity
+    %% Core Entities
     class User {
-        +UUID userId
+        +String id
         +String email
-        +String passwordHash
-        +String fullName
-        +String college
-        +String company
-        +String bio
-        +Float budgetRange
-        +GeoLocation location
+        +String password
+        +String name
+        +DateTime createdAt
         +register()
         +login()
-        +updateProfile()
-        +searchUsers(Filters filters)
     }
 
-    %% Connection Logic
-    class ConnectionRequest {
-        +UUID requestId
-        +UUID senderId
-        +UUID receiverId
-        +Date createdAt
-        +RequestStatus status
-        +send()
-        +accept()
-        +reject()
+    class Listing {
+        +String id
+        +String title
+        +String userName
+        +String description
+        +String address
+        +String city
+        +Float price
+        +Int bedrooms
+        +Int bathrooms
+        +Int kitchens
+        +PropertyType propertyType
+        +RoomType roomType
+        +GenderPreference lookingForGender
+        +ListingType lookingForType
+        +String[] amenities
+        +String[] images
+        +String userId
+        +DateTime createdAt
+        +DateTime updatedAt
+        +create()
+        +getAll()
+        +getById()
     }
 
-    %% Messaging System
-    class ChatRoom {
-        +UUID roomId
-        +UUID user1_Id
-        +UUID user2_Id
-        +Date createdAt
-        +Boolean isActive
-        +createRoom()
-        +archive()
-    }
-
-    class Message {
-        +UUID messageId
-        +UUID roomId
-        +UUID senderId
-        +String content
-        +Date timestamp
-        +Boolean isRead
-        +send()
-        +markAsRead()
+    class Enquiry {
+        +String id
+        +String listingId
+        +String name
+        +String email
+        +String phone
+        +String message
+        +DateTime createdAt
+        +DateTime updatedAt
+        +create()
     }
 
     %% Enumerations
-    class RequestStatus {
+    class PropertyType {
         <<enumeration>>
-        PENDING
-        ACCEPTED
-        REJECTED
+        APARTMENT
+        HOUSE
+        STUDIO
+        LOFT
+        PENTHOUSE
+        OTHER
+    }
+
+    class RoomType {
+        <<enumeration>>
+        PRIVATE
+        SHARED
+        ENTIRE_FLAT
+        OTHER
+    }
+
+    class GenderPreference {
+        <<enumeration>>
+        ANY
+        MALE
+        FEMALE
+    }
+
+    class ListingType {
+        <<enumeration>>
+        ROOMMATE
+        ROOM
     }
 
     %% Relationships
-    User "1" --> "*" ConnectionRequest : sends/receives
-    User "1" --> "*" ChatRoom : participates_in
-    ChatRoom "1" *-- "*" Message : contains
-    ConnectionRequest ..> ChatRoom : initiates (on accept)
-    User "1" --> "*" Message : writes
+    User "1" -- "*" Listing : creates
+    Listing "1" -- "*" Enquiry : receives
+```

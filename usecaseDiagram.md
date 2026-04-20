@@ -4,20 +4,18 @@
 graph LR
     %% Actors
     User((User))
-    System[System Database/API]
+    System[Back-end API/Prisma DB]
 
     %% System Boundary
     subgraph FlatLink_Platform [FlatLink Platform]
         direction TB
-        UC1(Register/Login)
-        UC2(Manage Profile)
-        UC3(Search Flatmates)
-        UC4(Send Connection Request)
-        UC5(Accept/Reject Request)
-        UC6(Secure Chat)
-        UC7(Receive Notifications)
+        UC1(Authentication)
+        UC2(Manage Listings)
+        UC3(Search/Filter Listings)
+        UC4(View Listing Details)
+        UC5(Send Enquiry)
+        UC6(Manage Enquiries)
     end
-
 
     %% User Interactions
     User --> UC1
@@ -28,12 +26,14 @@ graph LR
     User --> UC6
 
     %% System Interactions (Backend Logic)
-    UC3 -.->|Query DB| System
-    UC4 -.->|Validate & Notify| System
-    UC5 -.->|Update Status| System
-    UC6 -.->|Real-time Delivery| System
-    UC7 -.->|Email/Push| System
+    UC1 -.-> System
+    UC2 -.-> System
+    UC3 -.->|DB Search| System
+    UC4 -.->|Fetch Data| System
+    UC5 -.->|Record Entry| System
+    UC6 -.->|Fetch Data| System
 
-    %% Dependencies
-    UC6 -.->|Requires| UC5
-    UC4 -.->|From Search| UC3
+    %% Sub-features / Dependencies
+    UC2 -.->|Includes| UCA(Image Upload)
+    UC3 -.->|Filters by| UCB(City/Price/Gender)
+```

@@ -3,51 +3,50 @@
 ```mermaid
 erDiagram
     %% Relationships
-    User ||--o{ ConnectionRequest : "sends (1:N)"
-    User ||--o{ ConnectionRequest : "receives (1:N)"
-    User ||--o{ ChatRoom : "participates_in (1:N)"
-    User ||--o{ Message : "sends (1:N)"
-    ChatRoom ||--|{ Message : "contains (1:N)"
+    User ||--o{ Listing : "creates (1:N)"
+    Listing ||--o{ Enquiry : "receives (1:N)"
 
     %% User Entity
     User {
-        UUID id PK
+        string id PK
         string email
-        string password_hash
-        string full_name
-        string college
-        string company
-        float budget_min
-        float budget_max
-        string bio
-        geometry location "Point(Lat, Long)"
-        timestamp created_at
+        string password
+        string name
+        timestamp createdAt
     }
 
-    %% Connection Request Entity
-    ConnectionRequest {
-        UUID id PK
-        UUID sender_id FK
-        UUID receiver_id FK
-        enum status "PENDING, ACCEPTED, REJECTED"
-        timestamp created_at
+    %% Listing Entity
+    Listing {
+        string id PK
+        string title
+        string userName
+        string description
+        string address
+        string city
+        float price
+        int bedrooms
+        int bathrooms
+        int kitchens
+        enum propertyType
+        enum roomType
+        enum lookingForGender
+        enum lookingForType
+        string_list amenities
+        string_list images
+        string userId FK
+        timestamp createdAt
+        timestamp updatedAt
     }
 
-    %% Chat Room Entity (Created after request accepted)
-    ChatRoom {
-        UUID id PK
-        UUID user1_id FK
-        UUID user2_id FK
-        timestamp created_at
-        boolean is_active
+    %% Enquiry Entity
+    Enquiry {
+        string id PK
+        string listingId FK
+        string name
+        string email
+        string phone
+        string message
+        timestamp createdAt
+        timestamp updatedAt
     }
-
-    %% Message Entity
-    Message {
-        UUID id PK
-        UUID chat_room_id FK
-        UUID sender_id FK
-        text content
-        boolean is_read
-        timestamp sent_at
-    }
+```
